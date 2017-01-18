@@ -1,14 +1,27 @@
 <?php
-class DB{	public static function query($query){		return dbClass::getInstance()->query($query);	}
-	public static function escape($str){		return dbClass::getInstance()->escape($str);	}
+class DB{
+	public static function query($query){
+		return dbClass::getInstance()->query($query);
+	}
+	public static function escape($str){
+		return dbClass::getInstance()->escape($str);
+	}
 	public static function getInsId(){
 		return dbClass::getInstance()->getInsId();
-	}}
-class dbClass{	private static $instance = null;
-	public static function getInstance(){		if (is_null(self::$instance)){			if (function_exists('mysqli_connect')){				self::$instance = new mysqliClass();
-			}else{				self::$instance = new mysqlClass();			}
+	}
+}
+class dbClass{
+	private static $instance = null;
+	public static function getInstance(){
+		if (is_null(self::$instance)){
+			if (function_exists('mysqli_connect')){
+				self::$instance = new mysqliClass();
+			}else{
+				self::$instance = new mysqlClass();
+			}
 		}
-		return self::$instance;	}
+		return self::$instance;
+	}
 }
 class mysqlClass{
 	private $dbLink = '';
@@ -23,17 +36,21 @@ class mysqlClass{
 		$result = mysql_query($query, $this->dbLink);
 		$return = array();
 		while ($row = mysql_fetch_assoc($result)){
-			if (isset($row[$indKey])){				$return[$row[$indKey]] = $row;
+			if (isset($row[$indKey])){
+				$return[$row[$indKey]] = $row;
 			}else{
 				$return[] = $row;
 			}
 		}
 		return $return;
 	}
-	public function escape($str, $stripTags = true){		if ($stripTags) $str = strip_tags($str);
+	public function escape($str, $stripTags = true){
+		if ($stripTags) $str = strip_tags($str);
 		return mysql_real_escape_string($str, $this->dbLink);
 	}
-	public function getInsId(){		return mysql_insert_id($this->dbLink);	}
+	public function getInsId(){
+		return mysql_insert_id($this->dbLink);
+	}
 	public function __destruct(){
 		mysql_close($this->dbLink);
 	}
@@ -66,5 +83,5 @@ class mysqliClass{
 	}
 	public function __destruct(){
 		if ($this->dbLink) mysqli_close($this->dbLink);
-	}}
-?>
+	}
+}
